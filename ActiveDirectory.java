@@ -41,7 +41,6 @@ public class ActiveDirectory {
 
                 SearchControls sc = new SearchControls();
                 sc.setSearchScope(SearchControls.SUBTREE_SCOPE);
-                sc.setReturningAttributes(new String[] {"cn"});
 
                 NamingEnumeration<SearchResult> answer = ctx.search(baseDn, "sAMAccountName=" + id, sc);
 
