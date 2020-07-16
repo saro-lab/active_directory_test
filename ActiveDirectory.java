@@ -29,15 +29,17 @@ public class ActiveDirectory {
     public static LoginResult login(String id, String pw) {
 
         try {
+            LdapContext ctx = null;
             try{
+                
                 Hashtable<String, String> env = new Hashtable<>();
                 env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
                 env.put(Context.PROVIDER_URL, url);
                 env.put(Context.SECURITY_AUTHENTICATION, "simple");
                 env.put(Context.SECURITY_PRINCIPAL, id + domain);
                 env.put(Context.SECURITY_CREDENTIALS, pw);
-
-                LdapContext ctx = new InitialLdapContext(env, null);
+                    
+                ctx = new InitialLdapContext(env, null);
 
                 SearchControls sc = new SearchControls();
                 sc.setSearchScope(SearchControls.SUBTREE_SCOPE);
@@ -66,6 +68,8 @@ public class ActiveDirectory {
                     e.printStackTrace();
                     return new LoginResult(false, "인증오류:\n" + e.getMessage());
                 }
+            } finally {
+                if (ctx != null) { try { ctx.close(); } catch (Exception ee) {} }
             }
         } catch(Exception jex) {
             jex.printStackTrace();
